@@ -17,6 +17,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras import Sequential
+from tensorflow.keras.layers import *
 
 # Sample text data
 text = "This is a sample text used for word prediction using RNN. Given a sequence of words, the RNN predicts the next word."
@@ -48,12 +50,12 @@ y = input_sequences[:, -1]
 y = tf.keras.utils.to_categorical(y, num_classes=total_words)
 
 # Create and compile the RNN model
-model = tf.keras.Sequential([
-tf.keras.layers.Embedding(total_words, 100,
-input_length=max_sequence_length-1),
-tf.keras.layers.SimpleRNN(100),
-tf.keras.layers.Dense(total_words, activation='softmax')])
+model = Sequential()
+model.add(Embedding(total_words, 100,input_length=max_sequence_length-1))
+model.add(SimpleRNN(100))
+model.add(Dense(total_words, activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+
 
 # Train the model
 model.fit(X, y, epochs=100, verbose=1)
